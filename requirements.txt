@@ -1,0 +1,6 @@
+supabase
+dotenv
+genai
+pytesseract
+pdf2image 
+pypdf 

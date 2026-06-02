@@ -1,0 +1,22 @@
+[
+    {
+        "type": "text",
+        "content": "Inner product:"
+    },
+    {
+        "type": "text",
+        "content": "Let $f(t) \\stackrel{FS}{\\longleftrightarrow} a_n$, $g(t) \\stackrel{FS}{\\longleftrightarrow} b_n$. Both T-periodic, and let both f and g be in $L_{\\mathbb{C}}^2[0, T]$."
+    },
+    {
+        "type": "text",
+        "content": "Consider the inner product defined as:"
+    },
+    {
+        "type": "equation",
+        "content": "\\langle f, g \\rangle = \\frac{1}{T} \\int_0^T f(t) g^\\ast(t) dt \\text{ on } L_{\\mathbb{C}}^2[0, T]"
+    },
+    {
+        "type": "equation",
+        "content": "\\Rightarrow \\langle f, g \\rangle = \\frac{1}{T} \\int_0^T \\left[ \\sum_{n \\in \\mathbb{Z}} a_n e^{j \\frac{2\\pi}{T} n t} \\right] \\left[ \\sum_{m \\in \\mathbb{Z}} b_m e^{\\frac{j 2\\pi}{T} m t^\\ast} \\right] dt"
+    }
+]

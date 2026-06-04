@@ -1,20 +1,30 @@
 import torch
-from transformers import Qwen2VLForConditionalGeneration, AutoProcessor
+from transformers import Qwen2VLForConditionalGeneration, AutoProcessor, BitsAndBytesConfig
 from qwen_vl_utils import process_vision_info
 
 def run_local_vlm():
-    # Force the model into 16-bit precision so it easily fits inside your 6GB VRAM limit
     device = "cuda" if torch.cuda.is_available() else "cpu"
-    print(f"[*] Loading Qwen2-VL-2B into {device.upper()} VRAM...")
+    print(f"[*] Loading Qwen2-VL-2B in 4-BIT MODE into {device.upper()} VRAM...")
+
+    # 1. THE SOLID FIX: Compress the model from 4GB down to ~1.2GB
+    quantization_config = BitsAndBytesConfig(
+        load_in_4bit=True,
+        bnb_4bit_compute_dtype=torch.float16
+    )
 
     model = Qwen2VLForConditionalGeneration.from_pretrained(
         "Qwen/Qwen2-VL-2B-Instruct", 
-        torch_dtype=torch.float16, 
+        quantization_config=quantization_config, 
         device_map="auto"
     )
-    processor = AutoProcessor.from_pretrained("Qwen/Qwen2-VL-2B-Instruct")
 
-    # Format the prompt exactly like we did for Gemini
+    # 2. THE SAFETY NET: Cap the image resolution so it doesn't spike VRAM
+    processor = AutoProcessor.from_pretrained(
+        "Qwen/Qwen2-VL-2B-Instruct",
+        min_pixels=256 * 28 * 28,
+        max_pixels=1024 * 28 * 28  # Bumping this up so it can actually read!
+    )
+
     messages = [
         {
             "role": "user",
@@ -24,15 +34,16 @@ def run_local_vlm():
                     "image": "test_image.png",
                 },
                 {
+                    
                     "type": "text", 
-                    "text": 'Analyze this handwritten document. Extract headings, paragraphs, and convert all math into clean LaTeX. Output the result as a JSON list of blocks with "type" and "content".'
+                    "text": "Transcribe this handwritten math document exactly as written. Convert all mathematical equations and symbols into clean LaTeX. Do not add any extra formatting, just output the text and math."
                 },
             ],
         }
     ]
 
     print("[*] Processing image and generating structured layout...")
-    # Prepare the inputs for the model
+    
     text = processor.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
     image_inputs, video_inputs = process_vision_info(messages)
     
@@ -43,8 +54,16 @@ def run_local_vlm():
         return_tensors="pt",
     ).to(device)
 
-    # Run the inference engine
-    generated_ids = model.generate(**inputs, max_new_tokens=512)
+    # Force PyTorch to clean up any fragmented memory before the heavy math starts
+    torch.cuda.empty_cache()
+
+    generated_ids = model.generate(
+        **inputs, 
+        max_new_tokens=512,
+        repetition_penalty=1.15,  # Stop repeating!
+        temperature=0.1,          # Stop hallucinating, just read.
+        do_sample=True
+    )
     generated_ids_trimmed = [
         out_ids[len(in_ids):] for in_ids, out_ids in zip(inputs.input_ids, generated_ids)
     ]

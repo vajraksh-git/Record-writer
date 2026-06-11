@@ -1,2 +1,7 @@
 svgpathtools
-
+pymupdf
+svg-to-gcode
+svgutils==0.3.4
+matplotlib
+vpype
+pyserial

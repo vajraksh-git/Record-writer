@@ -1,0 +1,127 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\usepackage[a4paper, margin=0.25in]{geometry}
+
+\begin{document}
+
+% --- PAGE 6 ---
+
+\section*{Example: Find the derivative of the function \( y = f(t) = t^3 \) using the definition.}
+
+Solution: 
+\[
+\frac{dy}{dt} = \lim_{\Delta t \to 0} \frac{f(t + \Delta t) - f(t)}{\Delta t} =
+\]
+\[
+= \lim_{\Delta t \to 0} \frac{(t + \Delta t)^3 - t^3}{\Delta t} = \lim_{\Delta t \to 0} \frac{t^3 + 3t^2\Delta t + 3t(\Delta t)^2 + (\Delta t)^3 - t^3}{\Delta t}
+\]
+\[
+= \lim_{\Delta t \to 0} \frac{3t^2 + 3t\Delta t + (\Delta t)^2}{\Delta t}, \quad \text{Now we can set } \Delta t \text{ to zero}
+\]
+thus
+\[
+\frac{dy}{dt} = 3t^2.
+\]
+
+\section*{Example: Find derivative of \( y = f(t) = t^n \) using the definition and binomial theorem.}
+
+Solution: 
+\[
+\frac{dy}{dt} = \lim_{\Delta t \to 0} \frac{(t + \Delta t)^n - t^n}{\Delta t} = \lim_{\Delta t \to 0} \frac{t^n \left[ \left(1 + \frac{\Delta t}{t}\right)^n - 1 \right]}{\Delta t}
+\]
+\[
+= \lim_{\Delta t \to 0} \frac{t^n}{\Delta t} \left[ 1 + n \frac{\Delta t}{t} + \frac{n(n-1)}{2} \left( \frac{\Delta t}{t} \right)^2 + \ldots \right]
+\]
+\[
+= \lim_{\Delta t \to 0} nt^{n-1} + \frac{n(n-1)}{2} t^{n-2} \Delta t + \ldots \quad \text{Now setting } \Delta t \to 0,
+\]
+\[
+\frac{dy}{dt} = nt^{n-1}.
+\]
+
+\section*{Example: Using first principles find the derivative of \( y = f(t) = \sin(t) \).}
+
+Solution: 
+\[
+\frac{dy}{dt} = \lim_{\Delta t \to 0} \frac{\sin(t + \Delta t) - \sin(t)}{\Delta t} = \lim_{\Delta t \to 0} \frac{2\cos\left(t + \frac{\Delta t}{2}\right)\sin\left(\frac{\Delta t}{2}\right)}{\Delta t}
+\]
+Now for very small angles recall that,
+\[
+\sin C - \sin D = 2\cos\left(\frac{C+D}{2}\right)\sin\left(\frac{C-D}{2}\right)
+\]
+\[
+\sin \omega \approx 0 \quad \text{thus } \sin\left(\frac{\Delta t}{2}\right) \approx \left(\frac{\Delta t}{2}\right)
+\]
+When \(\Delta t\) is very small, thus,
+\[
+\frac{dy}{dt} = \lim_{\Delta t \to 0} \frac{2\cos\left(t + \frac{\Delta t}{2}\right)\left(\frac{\Delta t}{2}\right)}{\Delta t} = \cos(t)
+\]
+
+\section*{Example: Using first principles find the derivative of \( y = f(t) = \ln(t) \).}
+
+Solution: 
+\[
+\frac{dy}{dt} = \lim_{\Delta t \to 0} \frac{\ln(t + \Delta t) - \ln(t)}{\Delta t} = \lim_{\Delta t \to 0} \frac{\ln\left(\frac{t + \Delta t}{t}\right)}{\Delta t}
+\]
+\newpage
+
+
+% --- PAGE 7 ---
+
+\section*{Derivative of Standard Functions}
+
+\begin{tabular}{|c|c|c|}
+\hline
+ & $f(x)$ & $f'(x)$ \\
+\hline
+(i) & $x^n$ & $nx^{n-1}$ \\
+(ii) & $e^x$ & $e^x$ \\
+(iii) & $a^x$ & $a^x \ln(a), a > 0$ \\
+(iv) & $\ln x$ & $\frac{1}{x}$ \\
+(v) & $\log_a x$ & $\frac{1}{x} \log_a e, a > 0, a \neq 1$ \\
+(vi) & $\sin x$ & $\cos x$ \\
+(vii) & $\cos x$ & $-\sin x$ \\
+(viii) & $\tan x$ & $\sec^2 x$ \\
+(ix) & $\sec x$ & $\sec x \tan x$ \\
+\hline
+\end{tabular}
+
+\newpage
+
+
+% --- PAGE 9 ---
+
+\section*{Average Rate Of Change And Secant Line:}
+
+If \( y = f(x) \) is a function of \( x \), then between two coordinates \( x_1 \) and \( x_2 \), the average rate of change of \( y \) with respect to \( x \) is defined as the ratio of total change in \( y \) to total change in \( x \). i.e.,
+
+\[
+\text{Average rate of change} = \frac{\Delta y}{\Delta x} = \frac{y_2 - y_1}{x_2 - x_1}
+\]
+
+Refer to the adjacent figure, we can easily infer that the average rate of change is simply \( \frac{\Delta y}{\Delta x} = \tan \theta \) where \( \theta \) is the angle of the secant between points \( (x_1, y_1) \) and \( (x_2, y_2) \) with the \( x \)-axis. (\( y_1 = f(x_1) \), \( y_2 = f(x_2) \))
+
+\begin{center}
+\includegraphics[width=0.8\textwidth]{secant_line.png}
+\end{center}
+
+\section*{Instantaneous Rate Of Change And Tangent:}
+
+In the previous section, we saw how the average rate of change is related to the secant of the curve, and earlier we saw that the instantaneous rate of change is nothing but the average rate of change for an infinitesimal time interval (or space interval). This is equivalent to finding the average rate of change by bringing \( Q \) arbitrarily close to \( P \) (see adjacent figure). However, as \( Q \) is brought closer and closer to \( P \), it tends to become the tangent and in the infinitesimal can be treated as the tangent itself.
+
+Thus, the derivative of a function is represented by:
+
+\[
+\frac{dy}{dx} = \tan \theta \quad \text{where} \quad \theta \text{ is the angle which the tangent of the curve makes with the positive } x \text{-axis (upward tangent to be precise). The value of } \tan \theta \text{ here is also known as the slope of the curve at point } P
+\]
+
+\begin{center}
+\includegraphics[width=0.8\textwidth]{tangent_line.png}
+\end{center}
+
+\newpage
+
+
+\end{document}

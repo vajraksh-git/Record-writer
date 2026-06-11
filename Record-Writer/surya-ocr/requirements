@@ -1,7 +1,0 @@
-torch
-surya-ocr==0.4.0
-pillow
-opencv-python
-google-genai
-python-dotenv
-matplotlib

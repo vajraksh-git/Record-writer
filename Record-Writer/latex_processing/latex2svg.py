@@ -5,7 +5,7 @@ import os
 import xml.etree.ElementTree as ET
 import shutil
 import parse_latex
-
+import textwrap # <--- ADD THIS
 # ==============================================================================
 # --- GLOBAL CNC & RECORD-WRITER CONFIGURATION ---
 # ==============================================================================
@@ -61,20 +61,28 @@ def get_actual_svg_height_mm(svg_file_path):
 
 def text_to_single_stroke_svg(clean_text, output_svg_path):
     os.makedirs(os.path.dirname(output_svg_path) or '.', exist_ok=True)
+    
+    # --- NEW FIX: Hard-wrap the text using Python ---
+    # We split by existing paragraphs, wrap them at 55 characters, and rejoin them.
+    # You can change '55' if you want the text wider or narrower on the page!
+    paragraphs = clean_text.split('\n')
+    wrapped_paragraphs = [textwrap.fill(p, width=55) for p in paragraphs]
+    wrapped_text = "\n".join(wrapped_paragraphs)
+    
     command = [
         "vpype", "text", 
         "--font", "scriptc", 
         "--size", TEXT_FONT_SIZE,           
-        "--wrap", f"{TEXT_WRAP_WIDTH_MM}mm",        
+        # We removed the buggy --wrap flag because Python is doing the wrapping now      
         "--align", "left", 
-        clean_text, "write", output_svg_path
+        wrapped_text, "write", output_svg_path
     ]
     try:
         subprocess.run(command, check=True, capture_output=True, text=True)
     except subprocess.CalledProcessError as e:
         with open("vpype_error.log", "a", encoding="utf-8") as log:
             log.write(f"FAILED TEXT:\n{clean_text}\nERROR:\n{e.stderr}\n{'-'*40}\n")
-
+            
 def render_math_to_svg(math_string, output_path):
     os.makedirs(os.path.dirname(output_path) or '.', exist_ok=True)
     try:

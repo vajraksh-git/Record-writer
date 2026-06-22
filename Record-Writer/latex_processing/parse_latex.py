@@ -9,6 +9,9 @@ def clean_text_for_vpype(raw_text):
     text = re.sub(r'\\centering', '', text)
     text = re.sub(r'\\caption\{(.*?)\}', r'\1', text)
     
+    # --- FIX 1: Wipe out any orphaned or headless image brackets ---
+    text = re.sub(r'\[width=.*?\]\{.*?\}', '', text)
+    text = re.sub(r'\\includegraphics(?:\[.*?\])?\{.*?\}', '', text)
     # NEW: Translate LaTeX symbols into English for the physical pen
     replacements = {
         '\\Delta': 'Delta',
@@ -45,7 +48,7 @@ def parse_latex_document(file_path):
     pages = body.split(r"\newpage")
     
     math_regex = r'(\\\[.*?\\\]|\$\$.*?\$\$|\\begin\{(?:align|equation|eqnarray)\*?\}.*?\\end\{(?:align|equation|eqnarray)\*?\})'
-    space_regex = r'(\\vspace\{([\d.]+)cm\}|\\includegraphics.*?\}?)'
+    space_regex = r'(\\vspace\{([\d.]+)cm\}|\\includegraphics(?:\[.*?\])?\{.*?\}|\[width=.*?\]\{.*?\})'
     block_pattern = re.compile(f'{math_regex}|{space_regex}', re.DOTALL)
 
     all_pages_data = []
